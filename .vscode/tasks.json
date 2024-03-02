@@ -1,133 +1,208 @@
+// Windows向け設定の参考:
+// https://github.com/loveandsheep/vscode_of_template/blob/5ee1b587f413624b903f5be8fd6388f65b48f4cf/.vscode/tasks.json
 {
-    "version": "2.0.0",
-    "shell":{
-        "task": true
+  "version": "2.0.0",
+  "shell": {
+    "task": true
+  },
+  "windows": {
+    "options": {
+      "env": {
+        // UTF-8のコードでC4819（ファイルは、現在のコード ページ (932) で表示できない文字を含んでいます）が出るのを抑制するため、CL（コンパイラ）のオプションを指定する
+        // https://learn.microsoft.com/ja-jp/cpp/error-messages/compiler-warnings/compiler-warning-level-1-c4819?view=msvc-170
+        // https://torakichi.hateblo.jp/entry/2017/03/04/152827
+        "CL": "/source-charset:utf-8"
+      }
+    }
+  },
+  "tasks": [
+    {
+      "type": "shell",
+      "label": "Build RELEASE",
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "command": "make -j -s 2>&1 && make RunRelease",
+      "group": "build",
+      "problemMatcher": {
+        "owner": "cpp",
+        "fileLocation": ["relative", "${workspaceFolder}"],
+        "pattern": {
+          "regexp": "^(.*):(\\d+):(\\d+):\\s+(warning|error):\\s+(.*)$",
+          "file": 1,
+          "line": 2,
+          "column": 3,
+          "severity": 4,
+          "message": 5
+        }
+      },
+      "windows": {
+        "type": "process",
+        "command": "msbuild",
+        "args": [
+          "./${workspaceFolderBasename}.sln",
+          "/p:configuration=release",
+          "/p:platform=x64"
+        ],
+        // Use the standard MS compiler pattern to detect errors, warnings and infos
+        "problemMatcher": "$msCompile"
+      }
     },
-    "tasks": [
-        {
-            "type": "shell",
-            "label": "Build RELEASE",
-            "presentation": {
-                "reveal": "always",
-                "panel": "shared"
-            },
-            "command": "make -j -s 2>&1 && make RunRelease",
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            },
-            "problemMatcher": {
-                "owner": "cpp",
-                "fileLocation": ["relative", "${workspaceFolder}"],
-                "pattern": {
-                  "regexp": "^(.*):(\\d+):(\\d+):\\s+(warning|error):\\s+(.*)$",
-                  "file": 1,
-                  "line": 2,
-                  "column": 3,
-                  "severity": 4,
-                  "message": 5
-                }
-              }
-        },
-        {
-            "type": "shell",
-            "label": "Build DEBUG",
-            "presentation": {
-                "reveal": "always",
-                "panel": "shared"
-            },
-            "command": "make Debug -j -s 2>&1 || exit 1",
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            },
-            "problemMatcher": {
-                "owner": "cpp",
-                "fileLocation": ["relative", "${workspaceFolder}"],
-                "pattern": {
-                  "regexp": "^(.*):(\\d+):(\\d+):\\s+(warning|error):\\s+(.*)$",
-                  "file": 1,
-                  "line": 2,
-                  "column": 3,
-                  "severity": 4,
-                  "message": 5
-                }
-              }
-        },
-        {
-            "type": "shell",
-            "label": "Clean DEBUG",
-            "presentation": {
-                "reveal": "always",
-                "panel": "shared"
-            },
-            "command": "make CleanDebug",
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            },
-            "problemMatcher": {
-                "owner": "cpp",
-                "fileLocation": ["relative", "${workspaceFolder}"],
-                "pattern": {
-                  "regexp": "^(.*):(\\d+):(\\d+):\\s+(warning|error):\\s+(.*)$",
-                  "file": 1,
-                  "line": 2,
-                  "column": 3,
-                  "severity": 4,
-                  "message": 5
-                }
-              }
-        },
-        {
-            "type": "shell",
-            "label": "Clean RELEASE",
-            "presentation": {
-                "reveal": "always",
-                "panel": "shared"
-            },
-            "command": "make CleanRelease",
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            },
-            "problemMatcher": {
-                "owner": "cpp",
-                "fileLocation": ["relative", "${workspaceFolder}"],
-                "pattern": {
-                  "regexp": "^(.*):(\\d+):(\\d+):\\s+(warning|error):\\s+(.*)$",
-                  "file": 1,
-                  "line": 2,
-                  "column": 3,
-                  "severity": 4,
-                  "message": 5
-                }
-              }
-        },
-        {
-            "type": "shell",
-            "label": "Clean ALL",
-            "presentation": {
-                "reveal": "always",
-                "panel": "shared"
-            },
-            "command": "make clean",
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            },
-            "problemMatcher": {
-                "owner": "cpp",
-                "fileLocation": ["relative", "${workspaceFolder}"],
-                "pattern": {
-                  "regexp": "^(.*):(\\d+):(\\d+):\\s+(warning|error):\\s+(.*)$",
-                  "file": 1,
-                  "line": 2,
-                  "column": 3,
-                  "severity": 4,
-                  "message": 5
-                }
-              }
-         }
-    ]
+    {
+      "type": "shell",
+      "label": "Build DEBUG",
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "command": "make Debug -j -s 2>&1 || exit 1",
+      "group": "build",
+      "problemMatcher": {
+        "owner": "cpp",
+        "fileLocation": ["relative", "${workspaceFolder}"],
+        "pattern": {
+          "regexp": "^(.*):(\\d+):(\\d+):\\s+(warning|error):\\s+(.*)$",
+          "file": 1,
+          "line": 2,
+          "column": 3,
+          "severity": 4,
+          "message": 5
+        }
+      },
+      "windows": {
+        "type": "process",
+        "command": "msbuild",
+        "args": [
+          "./${workspaceFolderBasename}.sln",
+          "/p:configuration=debug",
+          "/p:platform=x64"
+        ],
+        "problemMatcher": "$msCompile"
+      }
+    },
+    {
+      "type": "shell",
+      "label": "Clean DEBUG",
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "command": "make CleanDebug",
+      "group": "build",
+      "problemMatcher": {
+        "owner": "cpp",
+        "fileLocation": ["relative", "${workspaceFolder}"],
+        "pattern": {
+          "regexp": "^(.*):(\\d+):(\\d+):\\s+(warning|error):\\s+(.*)$",
+          "file": 1,
+          "line": 2,
+          "column": 3,
+          "severity": 4,
+          "message": 5
+        }
+      }
+    },
+    {
+      "type": "shell",
+      "label": "Clean RELEASE",
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "command": "make CleanRelease",
+      "group": "build",
+      "problemMatcher": {
+        "owner": "cpp",
+        "fileLocation": ["relative", "${workspaceFolder}"],
+        "pattern": {
+          "regexp": "^(.*):(\\d+):(\\d+):\\s+(warning|error):\\s+(.*)$",
+          "file": 1,
+          "line": 2,
+          "column": 3,
+          "severity": 4,
+          "message": 5
+        }
+      }
+    },
+    {
+      "type": "shell",
+      "label": "Clean ALL",
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "command": "make clean",
+      "group": "build",
+      "problemMatcher": {
+        "owner": "cpp",
+        "fileLocation": ["relative", "${workspaceFolder}"],
+        "pattern": {
+          "regexp": "^(.*):(\\d+):(\\d+):\\s+(warning|error):\\s+(.*)$",
+          "file": 1,
+          "line": 2,
+          "column": 3,
+          "severity": 4,
+          "message": 5
+        }
+      },
+      "windows": {
+        "type": "process",
+        "command": "msbuild",
+        "args": [
+          "./${workspaceFolderBasename}.sln",
+          "/t:Clean",
+          "/p:configuration=debug",
+          "/p:platform=x64"
+        ],
+
+        // Use the standard MS compiler pattern to detect errors, warnings and infos
+        "problemMatcher": "$msCompile"
+      }
+    },
+    {
+      "type": "cppbuild",
+      "label": "C/C++: clang++ build active file",
+      "command": "/usr/bin/clang++",
+      "args": [
+        "-fcolor-diagnostics",
+        "-fansi-escape-codes",
+        "-g",
+        "${file}",
+        "-o",
+        "${fileDirname}/${fileBasenameNoExtension}"
+      ],
+      "options": {
+        "cwd": "${fileDirname}"
+      },
+      "problemMatcher": ["$gcc"],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "detail": "Task generated by Debugger."
+    },
+
+    {
+      "label": "Run DEBUG",
+      "detail": "Debugモードでビルドして実行する",
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "windows": {
+        "type": "process",
+        "command": "bin/${workspaceFolderBasename}_debug.exe"
+      },
+      "osx": {
+        "type": "shell",
+        "command": "make RunDebug"
+      },
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "dependsOn": ["Build DEBUG"]
+    }
+  ]
 }
