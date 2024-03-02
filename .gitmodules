@@ -1,3 +1,6 @@
 [submodule "addons/ofxEtherdream"]
 	path = addons/ofxEtherdream
 	url = https://github.com/memo/ofxEtherdream.git
+[submodule "addons/ofxIlda"]
+	path = addons/ofxIlda
+	url = https://github.com/memo/ofxIlda.git
