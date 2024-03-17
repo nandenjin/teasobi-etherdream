@@ -6,11 +6,14 @@
 /.vscode/*
 !/.vscode/*.json
 
+*.db
+*.db-*
+
 Makefile
 
 *.entitlements
-*.xcconfig
 *.plist
+
 #########
 # general
 #########
@@ -41,6 +44,8 @@ Makefile
 xcuserdata
 *.xcworkspace
 
+*.xcconfig
+
 # Code::Blocks
 *.depend
 *.layout
@@ -53,6 +58,16 @@ xcuserdata
 *.ilk
 *.aps
 ipch/
+*.sln
+*.vcxproj*
+
+# MSBuild artifacts
+fmod*
+*.dll
+*.exe
+*.exp
+*.lib
+
 
 # Eclipse
 .metadata
